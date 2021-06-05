@@ -36,8 +36,9 @@
                     android:id="@+id/row_place_name_text"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:textSize="8pt"
+                    android:textSize="6pt"
                     android:textStyle="bold"
+                    android:fontFamily="@font/aclonica"
                     android:layout_weight="2"
                     android:text="Place Name" />
 
@@ -45,6 +46,7 @@
                     android:id="@+id/row_place_options_menu"
                     android:layout_width="36dp"
                     android:layout_height="36dp"
+                    app:backgroundTint="@color/black"
                     android:background="@drawable/ic_more_vert_black_24dp"
                     android:gravity="center"
                     />
@@ -54,32 +56,89 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
-                android:layout_marginBottom="8dp"
+                android:layout_marginBottom="4dp"
                 android:layout_marginHorizontal="8dp"
                 android:background="@color/grey1" />
 
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="300dp"
-                android:layout_margin="10dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="5dp"
                 android:orientation="horizontal">
 
                 <TextView
+                    android:id="@+id/row_place_number_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="10"
                     android:layout_gravity="center"
-                    android:textSize="34sp"
-                    android:text="111">
+                    android:textAlignment="center"
+                    android:layout_weight="10"
+                    android:fontFamily="@font/aclonica"
+                    android:text="1"
+                    android:textColor="@color/red"
+                    android:textSize="34sp">
 
                 </TextView>
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="300dp"
-                    android:layout_weight="2"
-                    android:orientation="horizontal">
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:layout_margin="5dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/row_place_description_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:padding="5dp"
+                        android:layout_weight="2"
+                        android:fontFamily="@font/aclonica"
+                        android:text="DESCRIPTION">
+
+                    </TextView>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp"
+                        android:layout_marginVertical="4dp"
+                        android:layout_weight="8"
+                        android:layout_marginHorizontal="4dp"
+                        android:background="@color/grey1" />
+
+                    <TextView
+                        android:id="@+id/row_place_distance_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight=""
+                        android:fontFamily="@font/aclonica"
+                        android:text="Distance: "
+                        android:padding="5dp">
+
+                    </TextView>
+
+                    <TextView
+                        android:id="@+id/row_place_time_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="5"
+                        android:fontFamily="@font/aclonica"
+                        android:text="Estimated Time: "
+                        android:padding="5dp">
+
+                    </TextView>
+
+                    <TextView
+                        android:id="@+id/row_place_priority_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="5"
+                        android:fontFamily="@font/aclonica"
+                        android:text="Priority: "
+                        android:padding="5dp">
+
+                    </TextView>
 
                 </LinearLayout>
 
