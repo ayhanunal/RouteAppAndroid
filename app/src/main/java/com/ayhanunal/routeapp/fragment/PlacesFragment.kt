@@ -1,10 +1,14 @@
 package com.ayhanunal.routeapp.fragment
 
+import android.annotation.SuppressLint
+import android.content.pm.PackageManager
 import android.icu.text.SymbolTable
+import android.location.Location
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -12,11 +16,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.ayhanunal.routeapp.R
 import com.ayhanunal.routeapp.adapter.LocationsAdapter
 import com.ayhanunal.routeapp.model.Locations
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.fragment_places.*
 import kotlinx.coroutines.*
+import java.util.jar.Manifest
 
 class PlacesFragment : Fragment(R.layout.fragment_places) {
 
@@ -24,12 +31,19 @@ class PlacesFragment : Fragment(R.layout.fragment_places) {
     private val locationsArray = ArrayList<Locations>()
     private var recyclerViewAdapter: LocationsAdapter? = null
 
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private var currentLat: Double? = null
+    private var currentLng: Double? = null
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         places_add_place_icon.setOnClickListener {
             findNavController().navigate(PlacesFragmentDirections.actionPlacesFragmentToAddPlaceFragment())
         }
+
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
+        requestPermission()
 
         db = FirebaseFirestore.getInstance()
         getDataFromFirestore()
@@ -42,6 +56,17 @@ class PlacesFragment : Fragment(R.layout.fragment_places) {
 
 
 
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun obtieneLocalizacion(){
+        fusedLocationClient.lastLocation
+            .addOnSuccessListener { location: Location? ->
+                currentLat =  location?.latitude
+                currentLng = location?.longitude
+
+                Log.e("AAAA", "lat: ${currentLat} lng: ${currentLng}")
+            }
     }
 
 
@@ -74,6 +99,30 @@ class PlacesFragment : Fragment(R.layout.fragment_places) {
         }
     }
 
+    fun requestPermission(){
+        if (ActivityCompat.checkSelfPermission(requireContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(requireContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED){
+            requestPermissions(arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION), 1)
+        }else{
+            obtieneLocalizacion()
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        if (requestCode == 1){
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED){
+                obtieneLocalizacion()
+            }
+            else{
+                Toast.makeText(requireContext(), "you need to give permission for the app to run!!", Toast.LENGTH_SHORT).show()
+                requestPermission()
+            }
+        }
+    }
 
 
 }
