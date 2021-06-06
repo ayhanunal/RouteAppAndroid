@@ -36,9 +36,9 @@ class LocationsAdapter(private val locationsList: ArrayList<Locations>) : Recycl
             nameText.text = location.name
             descText.text = location.description
             numberText.text = (position + 1).toString()
-            distanceText.text = ""
-            estimatedText.text = ""
-            priorityText.text = "${location.priority} / 5"
+            distanceText.text = "Distance: %.1f KM".format((location.distance)/1000.0)
+            estimatedText.text = "Estimated Time: %.1f Hours".format((location.distance)/100000.0)
+            priorityText.text = "Priority: ${location.priority} / 5"
         }
     }
 

@@ -11,5 +11,7 @@ data class Locations(
     var isActive: Boolean,
     var priority: Int,
     var savedPhone: String,
-    var timeStamp: Int
+    var timeStamp: Int,
+    var distance: Float,
+    var estimatedTime: Int
 )

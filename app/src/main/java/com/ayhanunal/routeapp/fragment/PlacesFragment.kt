@@ -2,7 +2,6 @@ package com.ayhanunal.routeapp.fragment
 
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
-import android.icu.text.SymbolTable
 import android.location.Location
 import android.os.Bundle
 import android.util.Log
@@ -12,18 +11,14 @@ import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.ayhanunal.routeapp.R
 import com.ayhanunal.routeapp.adapter.LocationsAdapter
 import com.ayhanunal.routeapp.model.Locations
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.fragment_places.*
 import kotlinx.coroutines.*
-import java.util.jar.Manifest
 
 class PlacesFragment : Fragment(R.layout.fragment_places) {
 
@@ -42,18 +37,30 @@ class PlacesFragment : Fragment(R.layout.fragment_places) {
             findNavController().navigate(PlacesFragmentDirections.actionPlacesFragmentToAddPlaceFragment())
         }
 
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
-        requestPermission()
-
         db = FirebaseFirestore.getInstance()
-        getDataFromFirestore()
+
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
+
+
+        GlobalScope.launch {
+            val task = listOf(
+                async {
+                    requestPermission()
+                    //burasi hemen calisiyor ama kullanici daha izin secimini yapmamis olabilir
+                    //oyuzden direkt getDataFromFirestore() calisiyor ve current konum olmadigi icin patliyor.
+                }
+            )
+            task.awaitAll()
+            getDataFromFirestore()
+
+
+        }
 
         //Recyclerview
         val layoutManager = LinearLayoutManager(requireContext())
         places_recycler_view.layoutManager = layoutManager
         recyclerViewAdapter = LocationsAdapter(locationsArray)
         places_recycler_view.adapter = recyclerViewAdapter
-
 
 
     }
@@ -67,10 +74,12 @@ class PlacesFragment : Fragment(R.layout.fragment_places) {
 
                 Log.e("AAAA", "lat: ${currentLat} lng: ${currentLng}")
             }
+
     }
 
 
     fun getDataFromFirestore(){
+        locationsArray.clear()
         db.collection("Locations").addSnapshotListener { snapshot, exception ->
             if (exception != null){
                 Toast.makeText(requireContext(), "Error, ${exception.localizedMessage}", Toast.LENGTH_SHORT).show()
@@ -87,16 +96,28 @@ class PlacesFragment : Fragment(R.layout.fragment_places) {
                             val takenPriority = document.get("priority") as Double
                             val takenTime = document.get("time") as Long
                             val takenSavedPhone = document.get("savedPhone") as String
+                            val distance = getDistance(currentLat!!.toDouble(), currentLng!!.toDouble(), takenLat.toDouble(), takenLng.toDouble())
 
-                            val locations = Locations(takenUuid, takenName, takenDesc, takenLat, takenLng, takenIsActive, takenPriority.toInt(), takenSavedPhone, takenTime.toInt())
+                            val locations = Locations(takenUuid, takenName, takenDesc, takenLat, takenLng, takenIsActive, takenPriority.toInt(), takenSavedPhone, takenTime.toInt(), distance, 25)
                             locationsArray.add(locations)
 
                             recyclerViewAdapter!!.notifyDataSetChanged()
                         }
+
+                        locationsArray.sortBy ({selector(it)})
+                        recyclerViewAdapter!!.notifyDataSetChanged()
                     }
                 }
             }
         }
+    }
+
+    fun selector(l: Locations): Float = l.distance
+
+    private fun getDistance(lat1: Double, lon1: Double, lat2: Double, lon2: Double): Float {
+        val distance = FloatArray(2)
+        Location.distanceBetween(lat1, lon1, lat2, lon2, distance)
+        return distance[0]
     }
 
     fun requestPermission(){
