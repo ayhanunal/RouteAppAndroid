@@ -97,7 +97,7 @@
                         android:textColor="@color/actionBarBlack"
                         android:layout_weight="2"
                         android:fontFamily="@font/aclonica"
-                        android:text="DESCRIPTION">
+                        android:text="No Description">
 
                     </TextView>
 

@@ -5,39 +5,106 @@ import `in`.madapps.placesautocomplete.adapter.PlacesAutoCompleteAdapter
 import `in`.madapps.placesautocomplete.listener.OnPlacesDetailsListener
 import `in`.madapps.placesautocomplete.model.Place
 import `in`.madapps.placesautocomplete.model.PlaceDetails
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
-import android.widget.AdapterView
+import android.widget.*
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import com.ayhanunal.routeapp.R
 import kotlinx.android.synthetic.main.fragment_add_place.*
 
 class AddPlaceFragment : Fragment(R.layout.fragment_add_place) {
 
+    private var selectedLatitude: String? = null
+    private var selectedLongitude: String? = null
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
 
         val placeApi = PlaceAPI.Builder().apiKey(resources.getString(R.string.api_key)).build(requireContext())
-        autoCompleteEditText.setAdapter(PlacesAutoCompleteAdapter(requireContext(), placeApi))
+        add_place_auto_complete_edit_text.setAdapter(PlacesAutoCompleteAdapter(requireContext(), placeApi))
 
-        autoCompleteEditText.onItemClickListener = AdapterView.OnItemClickListener { parent, _, position, _ ->
+        add_place_auto_complete_edit_text.onItemClickListener = AdapterView.OnItemClickListener { parent, _, position, _ ->
             val place = parent.getItemAtPosition(position) as Place
-            autoCompleteEditText.setText(place.description)
+            add_place_auto_complete_edit_text.setText(place.description)
 
             placeApi.fetchPlaceDetails(place.id, object : OnPlacesDetailsListener{
                 override fun onError(errorMessage: String) {
-                    Log.e("AAA error", errorMessage)
+                    showPopup()
                 }
 
                 override fun onPlaceDetailsFetched(placeDetails: PlaceDetails) {
-                    Log.e("AAA lat", placeDetails.lat.toString())
-                    Log.e("AAA lng", placeDetails.lng.toString())
-                    Log.e("AAA address", placeDetails.address.toString())
-                    Log.e("AAA vicinity", placeDetails.vicinity.toString())
+                    selectedLatitude = placeDetails.lat.toString()
+                    selectedLongitude = placeDetails.lng.toString()
+
                 }
             })
+        }
+
+        add_place_save_button.setOnClickListener {
+            if (selectedLatitude != null && selectedLongitude != null){
+                if (add_place_name_text.text.toString().isNotEmpty()){
+
+                    val locationName = add_place_name_text.text.toString()
+                    val locationDescription = add_place_desc_text.toString()
+                    val priority = add_place_range_slider.value
+
+                    //save firebase
+
+
+                }else{
+                    Toast.makeText(requireContext(), "Error, location name cannot be empty !!", Toast.LENGTH_SHORT).show()
+                }
+            }else{
+                Toast.makeText(requireContext(), "Error, location cannot be empty !!", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+
+
+
+    }
+
+    private fun showPopup(){
+        val adb = AlertDialog.Builder(requireContext())
+        val adbInflater = LayoutInflater.from(requireContext())
+        val customPopup = adbInflater.inflate(R.layout.custom_place_add_popup, null)
+
+        adb.setView(customPopup)
+        adb.setCancelable(false)
+        Handler(Looper.getMainLooper()).post{
+            val dialog = adb.create()
+
+            dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            dialog.show()
+
+            val latEditText = customPopup.findViewById<EditText>(R.id.add_place_popup_lat_text)
+            val lngEditText = customPopup.findViewById<EditText>(R.id.add_place_popup_lng_text)
+
+            val setButton = customPopup.findViewById<Button>(R.id.add_place_popup_set_button)
+            setButton.setOnClickListener {
+                //set lat-lng
+
+                if (latEditText.text.toString().isNotEmpty() && lngEditText.text.toString().isNotEmpty()){
+                    selectedLatitude = latEditText.text.toString()
+                    selectedLongitude = lngEditText.text.toString()
+                    dialog.dismiss()
+                }else{
+                    Toast.makeText(requireContext(), "Please check the fields !!", Toast.LENGTH_SHORT).show()
+                }
+
+            }
+
+            customPopup.findViewById<ImageView>(R.id.add_place_popup_close_button).setOnClickListener {
+                dialog.dismiss()
+            }
         }
 
     }

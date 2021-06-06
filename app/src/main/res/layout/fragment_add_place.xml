@@ -8,14 +8,95 @@
 
 
     <AutoCompleteTextView
-        android:id="@+id/autoCompleteEditText"
+        android:id="@+id/add_place_auto_complete_edit_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="16dp"
+        android:fontFamily="@font/aclonica"
+        android:hint="Search Location *"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
     </AutoCompleteTextView>
+
+    <EditText
+        android:id="@+id/add_place_name_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Location Name *"
+        android:layout_marginStart="16dp"
+        android:fontFamily="@font/aclonica"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/add_place_auto_complete_edit_text">
+
+    </EditText>
+
+    <EditText
+        android:id="@+id/add_place_desc_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Description"
+        android:lines="4"
+        android:fontFamily="@font/aclonica"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/add_place_name_text">
+
+    </EditText>
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/add_place_desc_text">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:fontFamily="@font/aclonica"
+            android:text="Priority"
+            android:textAlignment="center"
+            android:textSize="18sp" />
+
+        <com.google.android.material.slider.Slider
+            android:id="@+id/add_place_range_slider"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:stepSize="1"
+            android:value="3"
+            android:valueFrom="0"
+            android:valueTo="5"
+            app:thumbColor="@color/red"
+            app:tickColor="@color/white"
+            app:trackColor="@color/actionBarBlack" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/add_place_save_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="64dp"
+        android:text="SAVE"
+        android:backgroundTint="@color/actionBarBlack"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
