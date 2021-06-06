@@ -78,7 +78,7 @@
             android:layout_height="wrap_content"
             android:stepSize="1"
             android:value="3"
-            android:valueFrom="0"
+            android:valueFrom="1"
             android:valueTo="5"
             app:thumbColor="@color/red"
             app:tickColor="@color/white"

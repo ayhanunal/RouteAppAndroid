@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "235147427016",
+    "project_id": "routeappfirebase",
+    "storage_bucket": "routeappfirebase.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:235147427016:android:9b1aa6755c5c427ea479fd",
+        "android_client_info": {
+          "package_name": "com.ayhanunal.routeapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "235147427016-cnmmemuf08r7n53jctapajilm4uca477.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCxOeSneY5UtDBk5BottasMUQKRt354OoY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "235147427016-cnmmemuf08r7n53jctapajilm4uca477.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

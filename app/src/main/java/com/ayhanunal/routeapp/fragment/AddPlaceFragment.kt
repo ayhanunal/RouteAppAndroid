@@ -16,13 +16,18 @@ import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.ayhanunal.routeapp.R
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.fragment_add_place.*
+import java.util.*
 
 class AddPlaceFragment : Fragment(R.layout.fragment_add_place) {
 
     private var selectedLatitude: String? = null
     private var selectedLongitude: String? = null
+    private val db = Firebase.firestore
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -53,10 +58,30 @@ class AddPlaceFragment : Fragment(R.layout.fragment_add_place) {
                 if (add_place_name_text.text.toString().isNotEmpty()){
 
                     val locationName = add_place_name_text.text.toString()
-                    val locationDescription = add_place_desc_text.toString()
+                    val locationDescription = add_place_desc_text.text.toString()
                     val priority = add_place_range_slider.value
 
                     //save firebase
+                    val postData = hashMapOf(
+                        "UUID" to UUID.randomUUID().toString(),
+                        "name" to locationName,
+                        "description" to locationDescription,
+                        "isActive" to true,
+                        "latitude" to selectedLatitude,
+                        "longitude" to selectedLongitude,
+                        "priority" to priority,
+                        "time" to System.currentTimeMillis(),
+                        "savedPhone" to android.os.Build.MANUFACTURER + " " + android.os.Build.MODEL
+                    )
+                    db.collection("Locations")
+                        .add(postData)
+                        .addOnSuccessListener {
+                            Toast.makeText(requireContext(), "Success, location saved", Toast.LENGTH_SHORT).show()
+                            findNavController().popBackStack()
+                        }
+                        .addOnFailureListener {
+                            Toast.makeText(requireContext(), "Error, ${it.localizedMessage}", Toast.LENGTH_SHORT).show()
+                        }
 
 
                 }else{
