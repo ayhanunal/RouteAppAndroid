@@ -1,10 +1,12 @@
 package com.ayhanunal.routeapp.fragment
 
 import android.annotation.SuppressLint
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
 import android.util.Log
+import android.view.Display
 import android.view.View
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
@@ -25,6 +27,7 @@ class PlacesFragment : Fragment(R.layout.fragment_places) {
     private lateinit var db: FirebaseFirestore
     private val locationsArray = ArrayList<Locations>()
     private var recyclerViewAdapter: LocationsAdapter? = null
+    private val LAST_LOCATION_SP = "LastKnowLocSP"
 
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private var currentLat: Double? = null
@@ -33,6 +36,14 @@ class PlacesFragment : Fragment(R.layout.fragment_places) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val sharedPreferences = requireContext().getSharedPreferences(LAST_LOCATION_SP, 0)
+        currentLat = sharedPreferences!!.getFloat("lastKnowLat", 39.7098351.toFloat()).toDouble()
+        currentLng = sharedPreferences!!.getFloat("lastKnowLng", 31.2269539.toFloat()).toDouble()
+
+        Log.e("AAA lat", currentLat.toString())
+        Log.e("AAA lng", currentLng.toString())
+
+
         places_add_place_icon.setOnClickListener {
             findNavController().navigate(PlacesFragmentDirections.actionPlacesFragmentToAddPlaceFragment())
         }
@@ -40,21 +51,9 @@ class PlacesFragment : Fragment(R.layout.fragment_places) {
         db = FirebaseFirestore.getInstance()
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
+        requestPermission()
+        getDataFromFirestore()
 
-
-        GlobalScope.launch {
-            val task = listOf(
-                async {
-                    requestPermission()
-                    //burasi hemen calisiyor ama kullanici daha izin secimini yapmamis olabilir
-                    //oyuzden direkt getDataFromFirestore() calisiyor ve current konum olmadigi icin patliyor.
-                }
-            )
-            task.awaitAll()
-            getDataFromFirestore()
-
-
-        }
 
         //Recyclerview
         val layoutManager = LinearLayoutManager(requireContext())
@@ -67,25 +66,34 @@ class PlacesFragment : Fragment(R.layout.fragment_places) {
 
     @SuppressLint("MissingPermission")
     private fun obtieneLocalizacion(){
+        //buraya sonra bak gec guncelliyor.
         fusedLocationClient.lastLocation
             .addOnSuccessListener { location: Location? ->
                 currentLat =  location?.latitude
                 currentLng = location?.longitude
 
                 Log.e("AAAA", "lat: ${currentLat} lng: ${currentLng}")
+                getDataFromFirestore()
+                if (currentLat != null && currentLng != null){
+                    val sharedPreferences = requireContext().getSharedPreferences(LAST_LOCATION_SP, 0)
+                    sharedPreferences.edit().putFloat("lastKnowLat", currentLat!!.toFloat()).apply()
+                    sharedPreferences.edit().putFloat("lastKnowLng", currentLng!!.toFloat()).apply()
+                }
             }
 
     }
 
 
     fun getDataFromFirestore(){
-        locationsArray.clear()
+        Log.e("AAA lat getD", currentLat.toString())
+        Log.e("AAA lng getD", currentLng.toString())
         db.collection("Locations").addSnapshotListener { snapshot, exception ->
             if (exception != null){
                 Toast.makeText(requireContext(), "Error, ${exception.localizedMessage}", Toast.LENGTH_SHORT).show()
             }else{
                 if (snapshot != null){
                     if (!snapshot.isEmpty){
+                        locationsArray.clear()
                         for (document in snapshot.documents){
                             val takenUuid = document.get("UUID") as String
                             val takenName = document.get("name") as String
@@ -100,8 +108,6 @@ class PlacesFragment : Fragment(R.layout.fragment_places) {
 
                             val locations = Locations(takenUuid, takenName, takenDesc, takenLat, takenLng, takenIsActive, takenPriority.toInt(), takenSavedPhone, takenTime.toInt(), distance, 25)
                             locationsArray.add(locations)
-
-                            recyclerViewAdapter!!.notifyDataSetChanged()
                         }
 
                         locationsArray.sortBy ({selector(it)})
