@@ -41,7 +41,7 @@ class PlacesFragment : Fragment(R.layout.fragment_places) {
         currentLng = sharedPreferences!!.getFloat("lastKnowLng", 31.2269539.toFloat()).toDouble()
 
         swipe_refresh_layout.setOnRefreshListener {
-            getDataFromFirestore()
+            obtieneLocalizacion()
             swipe_refresh_layout.isRefreshing = false
         }
 
