@@ -1,5 +1,6 @@
 package com.ayhanunal.routeapp.fragment
 
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -7,15 +8,23 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.ayhanunal.routeapp.R
+import com.ayhanunal.routeapp.util.SIGN_IN_SP
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.sign_in_fragment.*
 
 class SigninFragment : Fragment(R.layout.sign_in_fragment) {
 
     private lateinit var db: FirebaseFirestore
-    private val SIGN_IN_SP = "signInRoom"
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
+        val sharedPreferences = requireContext().getSharedPreferences(SIGN_IN_SP, 0)
+        val signedRoomID = sharedPreferences.getString("signed_room_id", "")
+        val signedRoomDate = sharedPreferences.getString("signed_room_date", "")
+        val signedRoomMsg = sharedPreferences.getString("signed_room_msg", "")
+        if (!signedRoomID.isNullOrEmpty()){
+            findNavController().navigate(SigninFragmentDirections.actionSigninFragmentToPlacesFragment(signedRoomID, signedRoomDate!!, signedRoomMsg!!))
+        }
 
         db = FirebaseFirestore.getInstance()
 
@@ -43,6 +52,11 @@ class SigninFragment : Fragment(R.layout.sign_in_fragment) {
                                 val documentID = document.id
                                 val roomDate = document.get("saveDate") as String
                                 val roomMsg = document.get("message") as String
+
+                                sharedPreferences.edit().putString("signed_room_id", documentID).apply()
+                                sharedPreferences.edit().putString("signed_room_date", roomDate).apply()
+                                sharedPreferences.edit().putString("signed_room_msg", roomMsg).apply()
+
                                 findNavController().navigate(SigninFragmentDirections.actionSigninFragmentToPlacesFragment(documentID, roomDate, roomMsg))
 
                             }else{

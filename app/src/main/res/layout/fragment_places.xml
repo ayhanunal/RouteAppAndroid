@@ -23,6 +23,7 @@
             android:paddingHorizontal="10dp">
 
             <TextView
+                android:id="@+id/textView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/aclonica"
@@ -44,6 +45,21 @@
                 android:src="@drawable/add_location_icon"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="@color/white">
+
+            </ImageView>
+
+            <ImageView
+                android:id="@+id/places_log_out_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="6dp"
+                android:clickable="true"
+                android:foregroundGravity="center"
+                android:src="@drawable/log_out_icon"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/places_add_place_icon"
                 app:layout_constraintTop_toTopOf="parent"
                 app:tint="@color/white">
 

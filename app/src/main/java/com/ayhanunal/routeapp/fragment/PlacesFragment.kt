@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.ayhanunal.routeapp.R
 import com.ayhanunal.routeapp.adapter.LocationsAdapter
 import com.ayhanunal.routeapp.model.Locations
+import com.ayhanunal.routeapp.util.LAST_LOCATION_SP
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.firebase.firestore.FirebaseFirestore
@@ -27,7 +28,6 @@ class PlacesFragment : Fragment(R.layout.fragment_places) {
     private lateinit var db: FirebaseFirestore
     private val locationsArray = ArrayList<Locations>()
     private var recyclerViewAdapter: LocationsAdapter? = null
-    private val LAST_LOCATION_SP = "LastKnowLocSP"
 
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private var currentLat: Double? = null
@@ -40,6 +40,12 @@ class PlacesFragment : Fragment(R.layout.fragment_places) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        places_log_out_icon.setOnClickListener {
+            val loginSp = requireContext().getSharedPreferences("signInRoom", 0)
+            loginSp.edit().clear().apply()
+            findNavController().navigateUp()
+        }
 
         roomID = arguments?.getString("room_id") ?: ""
         roomDate = arguments?.getString("room_date") ?: ""
