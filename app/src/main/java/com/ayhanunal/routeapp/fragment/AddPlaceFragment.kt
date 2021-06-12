@@ -77,7 +77,9 @@ class AddPlaceFragment : Fragment(R.layout.fragment_add_place) {
                         "time" to System.currentTimeMillis(),
                         "savedPhone" to android.os.Build.MANUFACTURER + " " + android.os.Build.MODEL
                     )
-                    db.collection("Locations")
+                    db.collection("Room")
+                        .document("VVZMsHi0IhKOM1s3wdNM")
+                        .collection("Locations")
                         .add(postData)
                         .addOnSuccessListener {
                             Toast.makeText(requireContext(), "Success, location saved", Toast.LENGTH_SHORT).show()

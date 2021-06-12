@@ -88,7 +88,10 @@ class PlacesFragment : Fragment(R.layout.fragment_places) {
     fun getDataFromFirestore(){
         Log.e("AAA lat getD", currentLat.toString())
         Log.e("AAA lng getD", currentLng.toString())
-        db.collection("Locations").addSnapshotListener { snapshot, exception ->
+        db.collection("Room")
+            .document("VVZMsHi0IhKOM1s3wdNM")
+            .collection("Locations")
+            .addSnapshotListener { snapshot, exception ->
             if (exception != null){
                 Toast.makeText(requireContext(), "Error, ${exception.localizedMessage}", Toast.LENGTH_SHORT).show()
             }else{

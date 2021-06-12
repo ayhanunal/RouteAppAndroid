@@ -2,7 +2,7 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/placesFragment">
+    app:startDestination="@id/signinFragment">
 
     <fragment
         android:id="@+id/placesFragment"
@@ -16,4 +16,12 @@
         android:id="@+id/addPlaceFragment"
         android:name="com.ayhanunal.routeapp.fragment.AddPlaceFragment"
         android:label="AddPlaceFragment" />
+    <fragment
+        android:id="@+id/signinFragment"
+        android:name="com.ayhanunal.routeapp.fragment.SigninFragment"
+        android:label="SigninFragment" >
+        <action
+            android:id="@+id/action_signinFragment_to_placesFragment"
+            app:destination="@id/placesFragment" />
+    </fragment>
 </navigation>
