@@ -32,6 +32,10 @@ class AddPlaceFragment : Fragment(R.layout.fragment_add_place) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        add_places_back_icon.setOnClickListener {
+            findNavController().popBackStack()
+        }
+
 
         val placeApi = PlaceAPI.Builder().apiKey(resources.getString(R.string.api_key)).build(requireContext())
         add_place_auto_complete_edit_text.setAdapter(PlacesAutoCompleteAdapter(requireContext(), placeApi))
