@@ -29,8 +29,12 @@ class AddPlaceFragment : Fragment(R.layout.fragment_add_place) {
     private var selectedLongitude: String? = null
     private val db = Firebase.firestore
 
+    private lateinit var roomID: String
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        roomID = arguments?.getString("room_id") ?: ""
 
         add_places_back_icon.setOnClickListener {
             findNavController().popBackStack()
@@ -78,7 +82,7 @@ class AddPlaceFragment : Fragment(R.layout.fragment_add_place) {
                         "savedPhone" to android.os.Build.MANUFACTURER + " " + android.os.Build.MODEL
                     )
                     db.collection("Room")
-                        .document("VVZMsHi0IhKOM1s3wdNM")
+                        .document(roomID)
                         .collection("Locations")
                         .add(postData)
                         .addOnSuccessListener {

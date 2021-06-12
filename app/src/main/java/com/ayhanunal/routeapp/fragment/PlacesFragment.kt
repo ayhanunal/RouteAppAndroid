@@ -33,8 +33,17 @@ class PlacesFragment : Fragment(R.layout.fragment_places) {
     private var currentLat: Double? = null
     private var currentLng: Double? = null
 
+    private lateinit var roomID: String
+    private lateinit var roomDate: String
+    private lateinit var roomMsg: String
+
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        roomID = arguments?.getString("room_id") ?: ""
+        roomDate = arguments?.getString("room_date") ?: ""
+        roomMsg = arguments?.getString("room_msg") ?: ""
 
         val sharedPreferences = requireContext().getSharedPreferences(LAST_LOCATION_SP, 0)
         currentLat = sharedPreferences!!.getFloat("lastKnowLat", 39.7098351.toFloat()).toDouble()
@@ -46,7 +55,7 @@ class PlacesFragment : Fragment(R.layout.fragment_places) {
         }
 
         places_add_place_icon.setOnClickListener {
-            findNavController().navigate(PlacesFragmentDirections.actionPlacesFragmentToAddPlaceFragment())
+            findNavController().navigate(PlacesFragmentDirections.actionPlacesFragmentToAddPlaceFragment(roomID))
         }
 
         db = FirebaseFirestore.getInstance()
@@ -89,7 +98,7 @@ class PlacesFragment : Fragment(R.layout.fragment_places) {
         Log.e("AAA lat getD", currentLat.toString())
         Log.e("AAA lng getD", currentLng.toString())
         db.collection("Room")
-            .document("VVZMsHi0IhKOM1s3wdNM")
+            .document(roomID)
             .collection("Locations")
             .addSnapshotListener { snapshot, exception ->
             if (exception != null){

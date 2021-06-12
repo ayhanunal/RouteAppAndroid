@@ -11,17 +11,31 @@
         <action
             android:id="@+id/action_placesFragment_to_addPlaceFragment"
             app:destination="@id/addPlaceFragment" />
+        <argument
+            android:name="room_id"
+            app:argType="string" />
+        <argument
+            android:name="room_date"
+            app:argType="string" />
+        <argument android:name="room_msg"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/addPlaceFragment"
         android:name="com.ayhanunal.routeapp.fragment.AddPlaceFragment"
-        android:label="AddPlaceFragment" />
+        android:label="AddPlaceFragment" >
+        <argument
+            android:name="room_id"
+            app:argType="string" />
+    </fragment>
     <fragment
         android:id="@+id/signinFragment"
         android:name="com.ayhanunal.routeapp.fragment.SigninFragment"
         android:label="SigninFragment" >
         <action
             android:id="@+id/action_signinFragment_to_placesFragment"
-            app:destination="@id/placesFragment" />
+            app:destination="@id/placesFragment"
+            app:popUpTo="@id/nav_graph"
+            app:popUpToInclusive="true" />
     </fragment>
 </navigation>
