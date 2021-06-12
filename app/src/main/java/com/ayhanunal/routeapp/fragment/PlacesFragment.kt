@@ -40,9 +40,10 @@ class PlacesFragment : Fragment(R.layout.fragment_places) {
         currentLat = sharedPreferences!!.getFloat("lastKnowLat", 39.7098351.toFloat()).toDouble()
         currentLng = sharedPreferences!!.getFloat("lastKnowLng", 31.2269539.toFloat()).toDouble()
 
-        Log.e("AAA lat", currentLat.toString())
-        Log.e("AAA lng", currentLng.toString())
-
+        swipe_refresh_layout.setOnRefreshListener {
+            getDataFromFirestore()
+            swipe_refresh_layout.isRefreshing = false
+        }
 
         places_add_place_icon.setOnClickListener {
             findNavController().navigate(PlacesFragmentDirections.actionPlacesFragmentToAddPlaceFragment())
