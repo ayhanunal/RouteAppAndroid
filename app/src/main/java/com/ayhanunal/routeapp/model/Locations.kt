@@ -13,5 +13,6 @@ data class Locations(
     var savedPhone: String,
     var timeStamp: Int,
     var distance: Float,
-    var estimatedTime: Int
+    var estimatedTime: Int,
+    var documentID: String
 )

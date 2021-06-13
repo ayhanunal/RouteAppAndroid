@@ -1,27 +1,29 @@
 package com.ayhanunal.routeapp.fragment
 
 import android.annotation.SuppressLint
-import android.content.SharedPreferences
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-import android.view.Display
 import android.view.View
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ayhanunal.routeapp.R
 import com.ayhanunal.routeapp.adapter.LocationsAdapter
 import com.ayhanunal.routeapp.model.Locations
 import com.ayhanunal.routeapp.util.LAST_LOCATION_SP
+import com.ayhanunal.routeapp.util.SwipeHelper
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.fragment_places.*
-import kotlinx.coroutines.*
+
 
 class PlacesFragment : Fragment(R.layout.fragment_places) {
 
@@ -78,6 +80,93 @@ class PlacesFragment : Fragment(R.layout.fragment_places) {
         places_recycler_view.adapter = recyclerViewAdapter
 
 
+        val itemTouchHelper = ItemTouchHelper(object : SwipeHelper(places_recycler_view){
+            override fun instantiateUnderlayButton(position: Int): List<UnderlayButton> {
+                var buttons = listOf<UnderlayButton>()
+                val deleteButton = deleteButton(position)
+                val markAsUnreadButton = activateChangesButton(position)
+                val archiveButton = directionsButton(position)
+                buttons = listOf(deleteButton, markAsUnreadButton, archiveButton)
+                return buttons
+            }
+        })
+
+        itemTouchHelper.attachToRecyclerView(places_recycler_view)
+
+
+    }
+
+    fun deleteFromFirestore(position: Int){
+        val documentID = locationsArray[position].documentID
+        db.collection("Room")
+            .document(roomID)
+            .collection("Locations")
+            .document(documentID)
+            .delete()
+            .addOnFailureListener {
+                Toast.makeText(requireContext(), it.localizedMessage, Toast.LENGTH_SHORT).show()
+            }
+            .addOnSuccessListener {
+                getDataFromFirestore()
+            }
+    }
+
+    fun activateChanges(position: Int){
+        val documentID = locationsArray[position].documentID
+        val status = locationsArray[position].isActive
+        db.collection("Room")
+            .document(roomID)
+            .collection("Locations")
+            .document(documentID)
+            .update("isActive", !status)
+            .addOnSuccessListener {
+                getDataFromFirestore()
+            }
+            .addOnFailureListener {
+                Toast.makeText(requireContext(), it.localizedMessage, Toast.LENGTH_SHORT).show()
+            }
+    }
+
+
+    private fun deleteButton(position: Int) : SwipeHelper.UnderlayButton {
+        return SwipeHelper.UnderlayButton(
+            requireContext(),
+            "Delete",
+            14.0f,
+            android.R.color.holo_red_light,
+            object : SwipeHelper.UnderlayButtonClickListener {
+                override fun onClick() {
+                    deleteFromFirestore(position)
+                }
+            })
+    }
+
+    private fun activateChangesButton(position: Int) : SwipeHelper.UnderlayButton {
+        return SwipeHelper.UnderlayButton(
+            requireContext(),
+            "Deactivate",
+            14.0f,
+            android.R.color.holo_green_light,
+            object : SwipeHelper.UnderlayButtonClickListener {
+                override fun onClick() {
+                    activateChanges(position)
+                }
+            })
+    }
+
+    private fun directionsButton(position: Int) : SwipeHelper.UnderlayButton {
+        return SwipeHelper.UnderlayButton(
+            requireContext(),
+            "Directions",
+            14.0f,
+            android.R.color.holo_blue_light,
+            object : SwipeHelper.UnderlayButtonClickListener {
+                override fun onClick() {
+                    val url = "http://maps.google.com/maps?daddr=" + locationsArray[position].latitude + "," + locationsArray[position].longitude
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                    startActivity(intent)
+                }
+            })
     }
 
     @SuppressLint("MissingPermission")
@@ -125,7 +214,7 @@ class PlacesFragment : Fragment(R.layout.fragment_places) {
                             val takenSavedPhone = document.get("savedPhone") as String
                             val distance = getDistance(currentLat!!.toDouble(), currentLng!!.toDouble(), takenLat.toDouble(), takenLng.toDouble())
 
-                            val locations = Locations(takenUuid, takenName, takenDesc, takenLat, takenLng, takenIsActive, takenPriority.toInt(), takenSavedPhone, takenTime.toInt(), distance, 25)
+                            val locations = Locations(takenUuid, takenName, takenDesc, takenLat, takenLng, takenIsActive, takenPriority.toInt(), takenSavedPhone, takenTime.toInt(), distance, 25, document.id)
                             locationsArray.add(locations)
                         }
 
