@@ -10,6 +10,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.ayhanunal.routeapp.R
 import com.ayhanunal.routeapp.model.Memories
+import com.bumptech.glide.Glide
 
 class MemoriesAdapter(private val memoriesList: ArrayList<Memories>) : RecyclerView.Adapter<MemoriesAdapter.RowHolder>() {
 
@@ -37,9 +38,11 @@ class MemoriesAdapter(private val memoriesList: ArrayList<Memories>) : RecyclerV
         holder.itemView.apply {
             nameText.text = memories.memName
             descText.text = memories.memDescription
-            dateText.text = ""
+            dateText.text = memories.memDate
             priorityRating.rating = memories.memPriority.toFloat()
-            //imageView.setImageBitmap(R.drawable.splash)
+            Glide.with(this.context)
+                .load(memories.memImageUrl)
+                .into(imageView)
 
         }
     }

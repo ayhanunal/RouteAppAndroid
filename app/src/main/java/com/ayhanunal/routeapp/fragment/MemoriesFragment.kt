@@ -1,12 +1,18 @@
 package com.ayhanunal.routeapp.fragment
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.ayhanunal.routeapp.R
+import com.ayhanunal.routeapp.adapter.LocationsAdapter
 import com.ayhanunal.routeapp.adapter.MemoriesAdapter
 import com.ayhanunal.routeapp.model.Memories
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.android.synthetic.main.fragment_memories.*
+import kotlinx.android.synthetic.main.fragment_places.*
 
 class MemoriesFragment : Fragment (R.layout.fragment_memories){
 
@@ -26,10 +32,58 @@ class MemoriesFragment : Fragment (R.layout.fragment_memories){
         currentLng = arguments?.getString("current_lng") ?: ""
 
 
+        memories_swipe_refresh_layout.setOnRefreshListener {
+            getDataFromFirestore()
+            memories_swipe_refresh_layout.isRefreshing = false
+        }
 
+        //Recyclerview
+        val layoutManager = LinearLayoutManager(requireContext())
+        memories_recycler_view.layoutManager = layoutManager
+        recyclerViewAdapter = MemoriesAdapter(memoriesArray)
+        memories_recycler_view.adapter = recyclerViewAdapter
+
+        db = FirebaseFirestore.getInstance()
+        getDataFromFirestore()
 
 
 
     }
+
+    fun getDataFromFirestore(){
+        db.collection("Room")
+            .document(roomID)
+            .collection("Memories")
+            .orderBy("memTime")
+            .addSnapshotListener { snapshot, exception ->
+                if (exception != null){
+                    Toast.makeText(requireContext(), "Error, ${exception.localizedMessage}", Toast.LENGTH_SHORT).show()
+                }else{
+                    if (snapshot != null){
+                        if (!snapshot.isEmpty){
+                            memoriesArray.clear()
+                            for (document in snapshot.documents){
+                                val takenName = document.get("memName") as String
+                                val takenDesc = document.get("memDescription") as String
+                                val takenLat = document.get("memLat") as String
+                                val takenLng = document.get("memLng") as String
+                                val takenIsActive = document.get("memIsActive") as Boolean
+                                val takenPriority = document.get("memPriority") as Long
+                                val takenDate = document.get("memDate") as String
+                                val takenSavedPhone = document.get("memSavedPhone") as String
+                                val takenImageUrl = document.get("memImageUrl") as String
+
+                                val memories = Memories(takenName, takenDesc, takenLat, takenLng, takenIsActive, takenPriority.toInt(), takenSavedPhone, takenDate, document.id, takenImageUrl)
+                                memoriesArray.add(memories)
+                            }
+
+                            recyclerViewAdapter!!.notifyDataSetChanged()
+                        }
+                    }
+                }
+            }
+    }
+
+
 
 }
