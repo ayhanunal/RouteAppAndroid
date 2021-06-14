@@ -15,7 +15,7 @@
         app:contentInsetStart="0dp"
         app:titleTextColor="@color/white"
         android:background="@color/actionBarBlack"
-        android:layout_weight="13">
+        android:layout_weight="11">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -54,7 +54,7 @@
                 android:id="@+id/places_log_out_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="6dp"
+                android:layout_marginEnd="12dp"
                 android:clickable="true"
                 android:foregroundGravity="center"
                 android:src="@drawable/log_out_icon"
@@ -69,7 +69,7 @@
                 android:id="@+id/places_memories_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="6dp"
+                android:layout_marginEnd="12dp"
                 android:clickable="true"
                 android:foregroundGravity="center"
                 android:src="@drawable/nav_menu_memories_icon"

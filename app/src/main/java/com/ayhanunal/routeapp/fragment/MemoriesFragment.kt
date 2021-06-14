@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ayhanunal.routeapp.R
 import com.ayhanunal.routeapp.adapter.LocationsAdapter
@@ -26,6 +27,10 @@ class MemoriesFragment : Fragment (R.layout.fragment_memories){
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        memories_back_icon.setOnClickListener {
+            findNavController().popBackStack()
+        }
 
         roomID = arguments?.getString("room_id") ?: ""
         currentLat = arguments?.getString("current_lat") ?: ""
