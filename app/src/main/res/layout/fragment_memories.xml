@@ -8,7 +8,7 @@
     android:orientation="vertical">
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/places_toolbar"
+        android:id="@+id/memories_toolbar"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:contentInsetLeft="0dp"
@@ -23,26 +23,27 @@
             android:paddingHorizontal="10dp">
 
             <TextView
-                android:id="@+id/textView"
+                android:id="@+id/memories_textView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
                 android:fontFamily="@font/aclonica"
-                android:text="Saved Locations"
+                android:text="Memories"
                 android:textColor="@color/white"
                 android:textSize="24sp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/memories_memories_icon"
                 app:layout_constraintTop_toTopOf="parent">
 
             </TextView>
 
             <ImageView
-                android:id="@+id/places_add_place_icon"
+                android:id="@+id/memories_add_memory_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:clickable="true"
                 android:foregroundGravity="center"
-                android:src="@drawable/add_location_icon"
+                android:src="@drawable/memories_add_icon"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -51,30 +52,14 @@
             </ImageView>
 
             <ImageView
-                android:id="@+id/places_log_out_icon"
+                android:id="@+id/memories_memories_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="6dp"
                 android:clickable="true"
                 android:foregroundGravity="center"
-                android:src="@drawable/log_out_icon"
+                android:src="@drawable/back_icon"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/places_memories_icon"
-                app:layout_constraintTop_toTopOf="parent"
-                app:tint="@color/white">
-
-            </ImageView>
-
-            <ImageView
-                android:id="@+id/places_memories_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="6dp"
-                android:clickable="true"
-                android:foregroundGravity="center"
-                android:src="@drawable/nav_menu_memories_icon"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/places_add_place_icon"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:tint="@color/white">
 
@@ -87,7 +72,7 @@
 
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/swipe_refresh_layout"
+        android:id="@+id/memories_swipe_refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1">
@@ -97,7 +82,7 @@
             android:layout_height="match_parent">
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/places_recycler_view"
+                android:id="@+id/memories_recycler_view"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -106,7 +91,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/places_error_text"
+                android:id="@+id/memories_error_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/aclonica"
@@ -118,7 +103,7 @@
                 app:layout_constraintTop_toTopOf="parent"/>
 
             <ProgressBar
-                android:id="@+id/places_progress_bar"
+                android:id="@+id/memories_progress_bar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintBottom_toBottomOf="parent"

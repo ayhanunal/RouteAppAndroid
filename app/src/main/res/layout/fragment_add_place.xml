@@ -15,7 +15,7 @@
         app:contentInsetStart="0dp"
         app:titleTextColor="@color/white"
         android:background="@color/actionBarBlack"
-        android:layout_weight="15">
+        android:layout_weight="13">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"

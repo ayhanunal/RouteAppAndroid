@@ -49,6 +49,10 @@ class PlacesFragment : Fragment(R.layout.fragment_places) {
             findNavController().navigateUp()
         }
 
+        places_memories_icon.setOnClickListener {
+            findNavController().navigate(PlacesFragmentDirections.actionPlacesFragmentToMemoriesFragment(roomID, currentLat.toString(), currentLng.toString()))
+        }
+
         roomID = arguments?.getString("room_id") ?: ""
         roomDate = arguments?.getString("room_date") ?: ""
         roomMsg = arguments?.getString("room_msg") ?: ""
