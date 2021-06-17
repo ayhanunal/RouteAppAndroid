@@ -35,6 +35,8 @@ class LocationsAdapter(private val locationsList: ArrayList<Locations>) : Recycl
         val priorityRating = holder.itemView.findViewById<RatingBar>(R.id.row_place_priority_rating_bar)
         val mainLayout = holder.itemView.findViewById<LinearLayout>(R.id.row_place_main_layout)
         val isActiveText = holder.itemView.findViewById<TextView>(R.id.row_place_not_active_text)
+        val addressText = holder.itemView.findViewById<TextView>(R.id.row_place_address_text)
+        val priceText = holder.itemView.findViewById<TextView>(R.id.row_place_price_text)
 
         val location = locationsList[position]
         holder.itemView.apply {
@@ -44,6 +46,8 @@ class LocationsAdapter(private val locationsList: ArrayList<Locations>) : Recycl
             distanceText.text = "%.1f KM".format((location.distance)/1000.0)
             estimatedText.text = "%.2f Hours".format((location.distance)/100000.0)
             priorityRating.rating = location.priority.toFloat()
+            addressText.text = location.address
+            priceText.text = if (location.price != "0") "${location.price} TL" else "Free"
 
 
             //simdilik calismasin

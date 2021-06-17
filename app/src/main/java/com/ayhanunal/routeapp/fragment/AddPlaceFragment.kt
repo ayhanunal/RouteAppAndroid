@@ -30,6 +30,7 @@ class AddPlaceFragment : Fragment(R.layout.fragment_add_place) {
     private val db = Firebase.firestore
 
     private lateinit var roomID: String
+    private var placeAddress = ""
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -56,7 +57,7 @@ class AddPlaceFragment : Fragment(R.layout.fragment_add_place) {
                 override fun onPlaceDetailsFetched(placeDetails: PlaceDetails) {
                     selectedLatitude = placeDetails.lat.toString()
                     selectedLongitude = placeDetails.lng.toString()
-
+                    placeAddress = place.description
                 }
             })
         }
@@ -68,6 +69,7 @@ class AddPlaceFragment : Fragment(R.layout.fragment_add_place) {
                     val locationName = add_place_name_text.text.toString()
                     val locationDescription = add_place_desc_text.text.toString()
                     val priority = add_place_range_slider.value
+                    val price = if (!add_place_price_text.text.toString().isNullOrEmpty()) add_place_price_text.text.toString() else "0"
 
                     //save firebase
                     val postData = hashMapOf(
@@ -79,6 +81,8 @@ class AddPlaceFragment : Fragment(R.layout.fragment_add_place) {
                         "longitude" to selectedLongitude,
                         "priority" to priority,
                         "time" to System.currentTimeMillis(),
+                        "address" to placeAddress,
+                        "price" to price,
                         "savedPhone" to android.os.Build.MANUFACTURER + " " + android.os.Build.MODEL
                     )
                     db.collection("Room")
@@ -130,6 +134,7 @@ class AddPlaceFragment : Fragment(R.layout.fragment_add_place) {
                 if (latEditText.text.toString().isNotEmpty() && lngEditText.text.toString().isNotEmpty()){
                     selectedLatitude = latEditText.text.toString()
                     selectedLongitude = lngEditText.text.toString()
+                    placeAddress = customPopup.findViewById<EditText>(R.id.add_place_popup_address_text).text.toString()
                     dialog.dismiss()
                 }else{
                     Toast.makeText(requireContext(), "Please check the fields !!", Toast.LENGTH_SHORT).show()

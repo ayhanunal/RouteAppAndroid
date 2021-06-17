@@ -23,6 +23,7 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.fragment_places.*
+import java.lang.Exception
 
 
 class PlacesFragment : Fragment(R.layout.fragment_places) {
@@ -213,12 +214,19 @@ class PlacesFragment : Fragment(R.layout.fragment_places) {
                             val takenLat = document.get("latitude") as String
                             val takenLng = document.get("longitude") as String
                             val takenIsActive = document.get("isActive") as Boolean
-                            val takenPriority = document.get("priority") as Double
+                            var takenPriority = 1.0
+                            try {
+                                takenPriority = (document.get("priority") as Long).toDouble()
+                            }catch (e:Exception){
+                                takenPriority = document.get("priority") as Double
+                            }
                             val takenTime = document.get("time") as Long
                             val takenSavedPhone = document.get("savedPhone") as String
+                            val takenAddress = document.get("address") as String
                             val distance = getDistance(currentLat!!.toDouble(), currentLng!!.toDouble(), takenLat.toDouble(), takenLng.toDouble())
+                            val takenPrice = document.get("price") as String
 
-                            val locations = Locations(takenUuid, takenName, takenDesc, takenLat, takenLng, takenIsActive, takenPriority.toInt(), takenSavedPhone, takenTime.toInt(), distance, 25, document.id)
+                            val locations = Locations(takenUuid, takenName, takenDesc, takenLat, takenLng, takenIsActive, takenPriority.toInt(), takenSavedPhone, takenTime.toInt(), distance, 25, document.id, takenAddress, takenPrice)
                             locationsArray.add(locations)
                         }
 

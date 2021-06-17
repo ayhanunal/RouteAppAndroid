@@ -67,6 +67,18 @@
 
         </EditText>
 
+        <EditText
+            android:id="@+id/add_place_popup_address_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="50dp"
+            android:layout_marginVertical="5dp"
+            android:backgroundTint="@color/white"
+            android:fontFamily="@font/aclonica"
+            android:hint="Enter Address"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white"/>
+
 
     </LinearLayout>
 

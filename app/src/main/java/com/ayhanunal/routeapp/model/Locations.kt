@@ -14,5 +14,7 @@ data class Locations(
     var timeStamp: Int,
     var distance: Float,
     var estimatedTime: Int,
-    var documentID: String
+    var documentID: String,
+    var address: String,
+    var price: String,
 )
