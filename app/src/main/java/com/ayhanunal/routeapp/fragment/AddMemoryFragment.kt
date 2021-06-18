@@ -71,6 +71,9 @@ class AddMemoryFragment : Fragment(R.layout.fragment_add_memory) {
 
     private fun uploadAndSave(){
 
+        add_memory_save_button.visibility = View.GONE
+        add_memory_progress_bar.visibility = View.VISIBLE
+
         val memoryName = add_memory_name_text.text.toString()
         val memoryDesc = add_memory_desc_text.text.toString()
         val memoryPriority = add_memory_range_slider.value
@@ -120,13 +123,19 @@ class AddMemoryFragment : Fragment(R.layout.fragment_add_memory) {
 
                 }.addOnFailureListener {
                     Toast.makeText(requireContext(), it.localizedMessage, Toast.LENGTH_SHORT).show()
+                    add_memory_save_button.visibility = View.VISIBLE
+                    add_memory_progress_bar.visibility = View.GONE
                 }
             }else{
                 Toast.makeText(requireContext(), "name is not empty!!", Toast.LENGTH_SHORT).show()
+                add_memory_save_button.visibility = View.VISIBLE
+                add_memory_progress_bar.visibility = View.GONE
             }
 
         }else{
             Toast.makeText(requireContext(), "Please, select a picture!!", Toast.LENGTH_SHORT).show()
+            add_memory_save_button.visibility = View.VISIBLE
+            add_memory_progress_bar.visibility = View.GONE
         }
     }
 
