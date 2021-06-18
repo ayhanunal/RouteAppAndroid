@@ -32,6 +32,10 @@ class MemoriesFragment : Fragment (R.layout.fragment_memories){
             findNavController().popBackStack()
         }
 
+        memories_add_memory_icon.setOnClickListener {
+            findNavController().navigate(MemoriesFragmentDirections.actionMemoriesFragmentToAddMemoryFragment(roomID, currentLat, currentLng))
+        }
+
         roomID = arguments?.getString("room_id") ?: ""
         currentLat = arguments?.getString("current_lat") ?: ""
         currentLng = arguments?.getString("current_lng") ?: ""

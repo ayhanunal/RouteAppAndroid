@@ -8,7 +8,7 @@
     android:layout_height="match_parent">
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/add_places_toolbar"
+        android:id="@+id/add_memory_toolbar"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:contentInsetLeft="0dp"
@@ -23,10 +23,11 @@
             android:paddingHorizontal="10dp">
 
             <TextView
+                android:id="@+id/textView3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/aclonica"
-                android:text="Save Locations"
+                android:text="Save Memory"
                 android:textColor="@color/white"
                 android:textSize="24sp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -37,7 +38,7 @@
             </TextView>
 
             <ImageView
-                android:id="@+id/add_places_back_icon"
+                android:id="@+id/add_memory_back_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:clickable="true"
@@ -45,6 +46,20 @@
                 android:src="@drawable/back_icon"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="@color/white">
+
+            </ImageView>
+
+            <ImageView
+                android:id="@+id/add_memory_add_photo_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:foregroundGravity="center"
+                android:src="@drawable/add_photo_icon"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:tint="@color/white">
 
@@ -62,38 +77,25 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <AutoCompleteTextView
-            android:id="@+id/add_place_auto_complete_edit_text"
+
+        <EditText
+            android:id="@+id/add_memory_name_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="16dp"
+            android:maxLines="1"
             android:layout_marginEnd="16dp"
             android:fontFamily="@font/aclonica"
-            android:hint="Search Location *"
+            android:hint="Memory Name *"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-        </AutoCompleteTextView>
-
-        <EditText
-            android:id="@+id/add_place_name_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Location Name *"
-            android:layout_marginStart="16dp"
-            android:fontFamily="@font/aclonica"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/add_place_auto_complete_edit_text">
-
         </EditText>
 
         <EditText
-            android:id="@+id/add_place_desc_text"
+            android:id="@+id/add_memory_desc_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Description"
@@ -104,19 +106,19 @@
             android:layout_marginEnd="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/add_place_name_text">
+            app:layout_constraintTop_toBottomOf="@+id/add_memory_name_text">
 
         </EditText>
 
         <LinearLayout
-            android:id="@+id/linearLayout"
+            android:id="@+id/add_memory_priority_linearLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:orientation="vertical"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/add_place_desc_text">
+            app:layout_constraintTop_toBottomOf="@+id/add_memory_desc_text">
 
             <TextView
                 android:layout_width="match_parent"
@@ -128,7 +130,7 @@
                 android:textSize="18sp" />
 
             <com.google.android.material.slider.Slider
-                android:id="@+id/add_place_range_slider"
+                android:id="@+id/add_memory_range_slider"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:stepSize="1"
@@ -139,33 +141,42 @@
                 app:tickColor="@color/white"
                 app:trackColor="@color/actionBarBlack" />
 
-            <EditText
-                android:id="@+id/add_place_price_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Price"
-                android:textAlignment="center"
-                android:layout_marginStart="16dp"
-                android:fontFamily="@font/aclonica"
-                android:inputType="number"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="16dp">
 
-            </EditText>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/add_memory_image_linear_layout"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:padding="5dp"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/add_memory_priority_linearLayout">
+
+            <ImageView
+                android:id="@+id/add_memory_image_view"
+                android:src="@drawable/splash"
+                android:scaleType="centerCrop"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+
         </LinearLayout>
 
         <Button
-            android:id="@+id/add_place_save_button"
+            android:id="@+id/add_memory_save_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="64dp"
+            android:layout_marginTop="16dp"
             android:text="SAVE"
             android:backgroundTint="@color/actionBarBlack"
             android:textColor="@color/white"
             android:textSize="24sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+            app:layout_constraintTop_toBottomOf="@+id/add_memory_image_linear_layout" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </LinearLayout>
