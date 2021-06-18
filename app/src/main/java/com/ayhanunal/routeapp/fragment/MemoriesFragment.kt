@@ -73,7 +73,12 @@ class MemoriesFragment : Fragment (R.layout.fragment_memories){
                                 val takenLat = document.get("memLat") as String
                                 val takenLng = document.get("memLng") as String
                                 val takenIsActive = document.get("memIsActive") as Boolean
-                                val takenPriority = document.get("memPriority") as Long
+                                var takenPriority = 1.0
+                                try{
+                                    takenPriority = (document.get("memPriority") as Long).toDouble()
+                                }catch (e: Exception){
+                                    document.get("memPriority") as Double
+                                }
                                 val takenDate = document.get("memDate") as String
                                 val takenSavedPhone = document.get("memSavedPhone") as String
                                 val takenImageUrl = document.get("memImageUrl") as String
