@@ -42,6 +42,8 @@ class MemoriesAdapter(private val memoriesList: ArrayList<Memories>) : RecyclerV
             priorityRating.rating = memories.memPriority.toFloat()
             Glide.with(this.context)
                 .load(memories.memImageUrl)
+                .placeholder(R.drawable.splash)
+                .error(R.drawable.splash)
                 .into(imageView)
 
         }
