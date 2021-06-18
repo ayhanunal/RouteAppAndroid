@@ -11,6 +11,7 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -20,6 +21,8 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import kotlinx.android.synthetic.main.fragment_add_memory.*
+import java.text.SimpleDateFormat
+import java.util.*
 import java.util.jar.Manifest
 
 class AddMemoryFragment : Fragment(R.layout.fragment_add_memory) {
@@ -59,7 +62,72 @@ class AddMemoryFragment : Fragment(R.layout.fragment_add_memory) {
             findNavController().popBackStack()
         }
 
+        add_memory_save_button.setOnClickListener {
+            uploadAndSave()
+        }
 
+
+    }
+
+    private fun uploadAndSave(){
+
+        val memoryName = add_memory_name_text.text.toString()
+        val memoryDesc = add_memory_desc_text.text.toString()
+        val memoryPriority = add_memory_range_slider.value
+
+        if (imageData != null){
+
+            if (!memoryName.isNullOrEmpty()){
+                var uuid = UUID.randomUUID()
+                val imageName = "images/$uuid.jpg"
+
+                storageReference.child(imageName).putFile(imageData!!).addOnSuccessListener {
+
+                    var newRef = FirebaseStorage.getInstance().getReference(imageName)
+                    newRef.downloadUrl.addOnSuccessListener {
+
+                        val downloadUrl = it.toString()
+                        val sdf = SimpleDateFormat("dd/M/yyyy hh:mm:ss")
+                        val currentDate = sdf.format(Date())
+
+                        val postData = hashMapOf(
+                            "memName" to memoryName,
+                            "memDescription" to memoryDesc,
+                            "memIsActive" to true,
+                            "memLatitude" to currentLat,
+                            "memLongitude" to currentLng,
+                            "memPriority" to memoryPriority,
+                            "memTime" to System.currentTimeMillis(),
+                            "memDate" to currentDate,
+                            "memImageUrl" to downloadUrl,
+                            "memSavedPhone" to android.os.Build.MANUFACTURER + " " + android.os.Build.MODEL
+                        )
+
+                        db.collection("Room")
+                            .document(roomID)
+                            .collection("Memories")
+                            .add(postData)
+                            .addOnSuccessListener {
+                                Toast.makeText(requireContext(), "Success, memory saved", Toast.LENGTH_SHORT).show()
+                                findNavController().popBackStack()
+                            }
+                            .addOnFailureListener {
+                                Toast.makeText(requireContext(), "Error, ${it.localizedMessage}", Toast.LENGTH_SHORT).show()
+                            }
+
+
+                    }
+
+                }.addOnFailureListener {
+                    Toast.makeText(requireContext(), it.localizedMessage, Toast.LENGTH_SHORT).show()
+                }
+            }else{
+                Toast.makeText(requireContext(), "name is not empty!!", Toast.LENGTH_SHORT).show()
+            }
+
+        }else{
+            Toast.makeText(requireContext(), "Please, select a picture!!", Toast.LENGTH_SHORT).show()
+        }
     }
 
     override fun onRequestPermissionsResult(

@@ -74,14 +74,14 @@ class MemoriesFragment : Fragment (R.layout.fragment_memories){
                             for (document in snapshot.documents){
                                 val takenName = document.get("memName") as String
                                 val takenDesc = document.get("memDescription") as String
-                                val takenLat = document.get("memLat") as String
-                                val takenLng = document.get("memLng") as String
+                                val takenLat = document.get("memLatitude") as String
+                                val takenLng = document.get("memLongitude") as String
                                 val takenIsActive = document.get("memIsActive") as Boolean
                                 var takenPriority = 1.0
                                 try{
                                     takenPriority = (document.get("memPriority") as Long).toDouble()
                                 }catch (e: Exception){
-                                    document.get("memPriority") as Double
+                                    takenPriority = document.get("memPriority") as Double
                                 }
                                 val takenDate = document.get("memDate") as String
                                 val takenSavedPhone = document.get("memSavedPhone") as String
