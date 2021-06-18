@@ -44,7 +44,7 @@ class LocationsAdapter(private val locationsList: ArrayList<Locations>) : Recycl
             descText.text = location.description
             numberText.text = (position + 1).toString()
             distanceText.text = "%.1f KM".format((location.distance)/1000.0)
-            estimatedText.text = "%.2f Hours".format((location.distance)/100000.0)
+            estimatedText.text = "%.2f Hours".format(((location.distance)/100000.0) + 1.0)
             priorityRating.rating = location.priority.toFloat()
             addressText.text = location.address
             priceText.text = if (location.price != "0") "${location.price} TL" else "Free"
