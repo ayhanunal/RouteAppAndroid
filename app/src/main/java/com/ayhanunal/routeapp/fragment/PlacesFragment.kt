@@ -3,12 +3,18 @@ package com.ayhanunal.routeapp.fragment
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.location.Location
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
-import android.widget.Toast
+import android.widget.*
+import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -39,6 +45,8 @@ class PlacesFragment : Fragment(R.layout.fragment_places) {
     private lateinit var roomID: String
     private lateinit var roomDate: String
     private lateinit var roomMsg: String
+
+    private var totalCost = 0
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -98,7 +106,37 @@ class PlacesFragment : Fragment(R.layout.fragment_places) {
 
         itemTouchHelper.attachToRecyclerView(places_recycler_view)
 
+        places_info_icon.setOnClickListener {
+            showInfoPopup()
+        }
 
+
+    }
+
+    fun showInfoPopup(){
+        val adb = AlertDialog.Builder(requireContext())
+        val adbInflater = LayoutInflater.from(requireContext())
+        val customPopup = adbInflater.inflate(R.layout.info_popup, null)
+
+        adb.setView(customPopup)
+        adb.setCancelable(false)
+        Handler(Looper.getMainLooper()).post{
+            val dialog = adb.create()
+
+            dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            dialog.show()
+
+            customPopup.findViewById<TextView>(R.id.info_popup_room_name_text).text = "Room Name: HIDDEN"
+            customPopup.findViewById<TextView>(R.id.info_popup_cost_text).text = "Total Cost: ${totalCost.toString()} TL"
+            customPopup.findViewById<TextView>(R.id.info_popup_info_text).text = roomMsg.toString()
+            customPopup.findViewById<TextView>(R.id.info_popup_room_date_text).text = "Room Date: ${roomDate.toString()}"
+
+            val okButton = customPopup.findViewById<Button>(R.id.info_popup_ok_button)
+            okButton.setOnClickListener {
+                dialog.dismiss()
+            }
+
+        }
     }
 
     fun deleteFromFirestore(position: Int){
@@ -183,11 +221,17 @@ class PlacesFragment : Fragment(R.layout.fragment_places) {
                 currentLng = location?.longitude
 
                 Log.e("AAAA", "lat: ${currentLat} lng: ${currentLng}")
-                getDataFromFirestore()
+
                 if (currentLat != null && currentLng != null){
+                    getDataFromFirestore()
                     val sharedPreferences = requireContext().getSharedPreferences(LAST_LOCATION_SP, 0)
                     sharedPreferences.edit().putFloat("lastKnowLat", currentLat!!.toFloat()).apply()
                     sharedPreferences.edit().putFloat("lastKnowLng", currentLng!!.toFloat()).apply()
+                }else{
+                    //bu kismi duzelt , boyle olursa latlng bulamayinca default deger alicak.
+                    currentLat = 39.7098351
+                    currentLng = 31.2269539
+                    getDataFromFirestore()
                 }
             }
 
@@ -207,6 +251,7 @@ class PlacesFragment : Fragment(R.layout.fragment_places) {
                 if (snapshot != null){
                     if (!snapshot.isEmpty){
                         locationsArray.clear()
+                        totalCost = 0
                         for (document in snapshot.documents){
                             val takenUuid = document.get("UUID") as String
                             val takenName = document.get("name") as String
@@ -225,6 +270,12 @@ class PlacesFragment : Fragment(R.layout.fragment_places) {
                             val takenAddress = document.get("address") as String
                             val distance = getDistance(currentLat!!.toDouble(), currentLng!!.toDouble(), takenLat.toDouble(), takenLng.toDouble())
                             val takenPrice = document.get("price") as String
+
+                            try {
+                                totalCost += takenPrice.toInt()
+                            }catch (e: Exception){
+                                e.printStackTrace()
+                            }
 
                             val locations = Locations(takenUuid, takenName, takenDesc, takenLat, takenLng, takenIsActive, takenPriority.toInt(), takenSavedPhone, takenTime.toInt(), distance, 25, document.id, takenAddress, takenPrice)
                             locationsArray.add(locations)

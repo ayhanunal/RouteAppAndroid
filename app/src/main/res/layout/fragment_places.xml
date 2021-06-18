@@ -80,6 +80,21 @@
 
             </ImageView>
 
+            <ImageView
+                android:id="@+id/places_info_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="12dp"
+                android:clickable="true"
+                android:foregroundGravity="center"
+                android:src="@drawable/info_icon"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/places_log_out_icon"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="@color/white">
+
+            </ImageView>
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
