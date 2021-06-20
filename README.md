@@ -66,7 +66,11 @@ Then you can save by entering name, description, priority and price information.
 Finally, on the 'memories' page, you can save the moments you do not want to forget during your trip together with the photo.
 </p>
 
+<br>
+<p align="center"> Firestore Structure </br>
+
 <p align="center">
   <img src='https://github.com/ayhanunal/RouteAppAndroid/blob/main/app_ss_default/7.png' width=300 heihgt=300> 
+  <img src='https://github.com/ayhanunal/RouteAppAndroid/blob/main/app_ss_default/firebase.png'> 
 </p>
 
