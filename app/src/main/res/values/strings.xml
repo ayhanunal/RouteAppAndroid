@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Route</string>
 
-    <string name="api_key">AIzaSyBqh0PWPM2IMkpcokYAvx7p5L9fhK6TUE8</string>
+    <string name="api_key">YOUR_KEY</string>
 
     <string name="sign_up_text"><u>Create Room</u></string>
 
