@@ -1,17 +1,19 @@
 package com.ayhanunal.routeapp.adapter
 
-import androidx.recyclerview.widget.RecyclerView
-import com.ayhanunal.routeapp.model.Locations
-import android.graphics.Color
-import android.graphics.Color.BLUE
+import android.content.Intent
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.RatingBar
 import android.widget.TextView
+import androidx.core.content.ContextCompat.startActivity
+import androidx.recyclerview.widget.RecyclerView
 import com.ayhanunal.routeapp.R
+import com.ayhanunal.routeapp.model.Locations
 import kotlinx.android.synthetic.main.row_place.view.*
+
 
 class LocationsAdapter(private val locationsList: ArrayList<Locations>) : RecyclerView.Adapter<LocationsAdapter.RowHolder>() {
 
@@ -50,15 +52,16 @@ class LocationsAdapter(private val locationsList: ArrayList<Locations>) : Recycl
             priceText.text = if (location.price != "0") "${location.price} TL" else "Free"
 
 
-            //simdilik calismasin
-            /*
-            if (!location.isActive){
-                isActiveText.visibility = View.VISIBLE
+            mainLayout.setOnClickListener {
+                val url = "https://www.google.com/search?hl=en&site=imghp&tbm=isch&source=hp&q=" + location.name
+                val iw = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                it.context.startActivity(iw)
             }
 
-             */
-
         }
+
+
+
     }
 
 }
