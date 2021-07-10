@@ -1,6 +1,7 @@
 package com.ayhanunal.routeapp.adapter
 
 import android.content.Intent
+import android.graphics.Color
 import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
@@ -51,6 +52,7 @@ class LocationsAdapter(private val locationsList: ArrayList<Locations>) : Recycl
             addressText.text = location.address
             priceText.text = if (location.price != "0") "${location.price} TL" else "Free"
 
+            if (!location.isActive) mainLayout.setBackgroundColor(Color.GRAY) else mainLayout.setBackgroundColor(Color.WHITE)
 
             mainLayout.setOnClickListener {
                 val url = "https://www.google.com/search?hl=en&site=imghp&tbm=isch&source=hp&q=" + location.name

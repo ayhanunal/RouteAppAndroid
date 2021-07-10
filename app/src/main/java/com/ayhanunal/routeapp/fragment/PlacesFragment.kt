@@ -187,7 +187,7 @@ class PlacesFragment : Fragment(R.layout.fragment_places) {
     private fun activateChangesButton(position: Int) : SwipeHelper.UnderlayButton {
         return SwipeHelper.UnderlayButton(
             requireContext(),
-            "Deactivate",
+            "On / Off",
             14.0f,
             android.R.color.holo_green_light,
             object : SwipeHelper.UnderlayButtonClickListener {
